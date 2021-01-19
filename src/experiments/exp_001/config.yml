@@ -1,0 +1,57 @@
+exp_param: 
+  WORK_DIR: None # */exp_000
+  ROOT: None # */src
+  cv: stratified_cv
+  nfolds: 5
+  seeds: [0, 1, 2, 3, 4]
+  exp_name: exp_001
+  features: 
+    - stratified_cv
+    - default_features
+    - targetMeanEncode
+    - countVectorizer_svd
+    - tfidfVectorizer_svd
+    
+  y: state
+
+  prepro_flag: True
+  train_flag: True
+  pred_flag: True
+  log_flag: True
+  gcs_flag: False
+
+
+
+prepro_param:
+  input_dir: input/
+  output_dir: features/
+  drop_features:
+    - id
+    - html_content
+  label_encode:
+    - goal
+    - country
+    - category1
+    - category2
+
+  
+
+train_param: 
+  model: LGBM_Model
+  model_param: 
+    max_depth: 6
+    n_estimators: 10000
+    colsample_bytree: 1.0
+    num_leaves: 25
+    learning_rate: 0.01
+    objective: binary
+    verbose: -1 #消すとログがやばい
+    min_child_samples: 80
+    early_stopping_rounds: 100
+    saved_feature_importance_type: 1
+    #max_bin: 100
+    reg_alpha: 0.02
+    reg_lambda: 0.01
+    #weights: [0.49568515884305353, 0.5043148411569465]
+  
+
