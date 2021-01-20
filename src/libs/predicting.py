@@ -4,6 +4,7 @@ import os.path as osp
 
 from Models.models import *
 from Models.Tabnet import *
+from Models.NN import *
 
 class Predicting():
     def __init__(self, param):
@@ -20,6 +21,7 @@ class Predicting():
         self.flag = param["pred_flag"]
 
         self.model = param["model"]
+        self.model_param = param["model_param"] 
 
         if "preds" not in os.listdir(self.WORK_DIR): os.mkdir(self.pred_path)
 
@@ -32,7 +34,10 @@ class Predicting():
             preds = []
             for seed in self.seeds:
                 for fold in range(self.nfolds):
-                    model = eval(self.model)()
+                    self.model_param["random_state"] = seed
+                    self.model_param["fold"] = fold
+                    self.model_param["WORK_DIR"] = self.WORK_DIR
+                    model = eval(self.model)(self.model_param)
                     weight_fname = osp.join(self.weight_path, f"{seed}_{fold}.pkl")
                     model.read_weight(weight_fname)
                     pred = model.predict(test_X)

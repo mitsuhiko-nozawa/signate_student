@@ -39,7 +39,7 @@ class Tabnet_Classifier_Model(BaseModel):
             max_epochs=10,
             patience=20, 
             batch_size=256, 
-            virtual_batch_size=64,
+            virtual_batch_size=32,
             num_workers=1, 
             drop_last=True
             )        
@@ -48,7 +48,7 @@ class Tabnet_Classifier_Model(BaseModel):
         self.model_param["params"]["cat_emb_dim"] = 20
         self.model_param["params"]["optimizer_params"] = dict(lr = 2e-2, weight_decay = 1e-5)
         self.model_param["params"]["scheduler_fn"] = OneCycleLR
-        self.model_param["params"]["scheduler_params"] = dict(max_lr=5e-2, steps_per_epoch=int(train_X.shape[0] / 256), epochs=30, is_batch_level=True)
+        self.model_param["params"]["scheduler_params"] = dict(max_lr=5e-2, steps_per_epoch=int(train_X.shape[0] / 256), epochs=200, is_batch_level=True)
 
         #self.model = TabNetRegressor(**self.model_param["params"])
         self.model = TabNetClassifier(**self.model_param["params"])
@@ -59,12 +59,12 @@ class Tabnet_Classifier_Model(BaseModel):
             eval_set=[(valid_X.values, valid_y.values.reshape(-1, ))],
             eval_name = ["val"],
             eval_metric = ["logloss"],
-            max_epochs=30,
+            max_epochs=200,
             patience=20, 
             batch_size=256, 
-            virtual_batch_size=64,
+            virtual_batch_size=32,
             num_workers=1, 
-            drop_last=False,
+            drop_last=True,
             loss_fn=CrossEntropyLoss(),
             from_unsupervised=self.pretrainer,
         )

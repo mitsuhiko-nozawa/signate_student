@@ -4,6 +4,7 @@ import os.path as osp
 
 from Models.models import *
 from Models.Tabnet import *
+from Models.NN import *
 from sklearn.metrics import mean_absolute_error
 from utils import seed_everything
 
@@ -51,6 +52,8 @@ class Learning():
         valid_y = pd.read_csv(osp.join(self.WORK_DIR, "valid", f"valid_y_{seed}_{fold}.csv"))
 
         self.model_param["random_state"] = seed
+        self.model_param["fold"] = fold
+        self.model_param["WORK_DIR"] = self.WORK_DIR
         model = eval(self.model)(self.model_param)
         model.fit(train_X, train_y, valid_X, valid_y)
 

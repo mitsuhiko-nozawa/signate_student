@@ -240,3 +240,20 @@ class boolean_feats(Feature):
             
 
         return train_df[use_cols], test_df[use_cols]
+
+class tgtenc_Agg(Feature):
+    def create_features(self):
+        train_df, test_df = self.read_input()
+        target_col = "category2_oof-tgtMean"
+        train_df[target_col] = pd.read_feather(osp.join(self.ROOT, "features", "train", "oof_targetMeanEncode.feather"))[target_col]
+        test_df[target_col] = pd.read_feather(osp.join(self.ROOT, "features", "test", "oof_targetMeanEncode.feather"))[target_col]
+        use_cols = []
+        for col in ["country", "goal", "duration", "category1"]: #, "category2"
+            for agg in ["mean", "sum", "median", "min", "var"]:
+                feat_name = f"{col}_tgt{agg}"
+                use_cols.append(feat_name)
+                agg_df = train_df.groupby(col, as_index=False)[target_col].agg(agg).rename(columns={target_col : feat_name})
+                train_df = pd.merge(train_df, agg_df, on=[col], how="left")
+                test_df = pd.merge(test_df, agg_df, on=[col], how="left")
+
+        return train_df[use_cols], test_df[use_cols]
