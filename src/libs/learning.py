@@ -3,7 +3,7 @@ import os
 import os.path as osp
 
 from Models.models import *
-from Models.Tabnet import Tabnet_Model
+from Models.Tabnet import *
 from sklearn.metrics import mean_absolute_error
 from utils import seed_everything
 
@@ -29,7 +29,6 @@ class Learning():
 
     def __call__(self):
         print("Training")
-        print(os.path.join(os.path.abspath("../../../"), "test", "test.csv"))
         for seed in self.seeds:
             seed_everything(seed)
             self.train_by_seed(seed)

@@ -14,7 +14,7 @@ exp_param:
     
   y: state
 
-  prepro_flag: False
+  prepro_flag: True
   train_flag: True
   pred_flag: True
   log_flag: True

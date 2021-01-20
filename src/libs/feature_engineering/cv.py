@@ -17,5 +17,10 @@ class stratified_cv(Feature):
             train_df[feat_name] = -1
             for fold, (tr_ind, val_ind) in enumerate(kf.split(train_df, train_df["state"])):
                 train_df.loc[val_ind, feat_name] = fold
+            
+            kf = KFold(n_splits=self.nfolds, random_state=seed, shuffle=True)
+            test_df[feat_name] = -1
+            for fold, (te_ind, val_ind) in enumerate(kf.split(test_df)):
+                test_df.loc[val_ind, feat_name] = fold
 
-        return train_df[use_feats], None
+        return train_df[use_feats], test_df[use_feats]

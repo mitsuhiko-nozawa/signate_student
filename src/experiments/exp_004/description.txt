@@ -1,0 +1,14 @@
+seed 0, cv : 0.8107320418309618, beat threshold : 0.34414062499999987
+seed 1, cv : 0.8124290826568911, beat threshold : 0.3652343749999999
+seed 2, cv : 0.8085331452750352, beat threshold : 0.37929687499999987
+seed 3, cv : 0.8118672418346685, beat threshold : 0.3769531249999999
+seed 4, cv : 0.811760487629975, beat threshold : 0.4080078124999999
+final cv : 0.813089005235602, best threshold : 0.3747265624999999
+
+LB 0.8071
+
+CV通りという感じ
+
+RMSE最適化として解いた場合、
+seed 0, cv : 0.8090518375581089, beat threshold : 0.4070312499999999
+今回は素直にlightgbm説

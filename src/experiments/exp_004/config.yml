@@ -8,13 +8,19 @@ exp_param:
   features: 
     - stratified_cv
     - default_features
-    - targetMeanEncode
+    #- targetMeanEncode
     - countVectorizer_svd
     - tfidfVectorizer_svd
+    - oof_targetMeanEncode
+    - coutEncode
+    - prod_features
+    - word_Count
+    - html_tagCount
+    - boolean_feats
     
   y: state
 
-  prepro_flag: True
+  prepro_flag: False
   train_flag: True
   pred_flag: True
   log_flag: True
@@ -28,30 +34,30 @@ prepro_param:
   drop_features:
     - id
     - html_content
-  label_encode:
-    - goal
     - country
-    - category1
-    - category2
+    - goal_duration
+
+
+  label_encode: []
+    #- goal
+    #- country
+    #- category1
+    #- category2
+    #- goal_duration
+    #- goal_country
+    #- country_category1
+    #- duration_country
 
   
 
 train_param: 
-  model: LGBM_Model
+  model: CatBoost_Classifier_Model
   model_param: 
-    max_depth: 6
-    n_estimators: 10000
-    colsample_bytree: 1.0
-    num_leaves: 25
+    loss_function: Logloss
+    iterations: 2000
     learning_rate: 0.05
-    objective: binary
-    verbose: -1 #消すとログがやばい
-    min_child_samples: 80
-    early_stopping_rounds: 100
-    saved_feature_importance_type: 1
-    #max_bin: 100
-    reg_alpha: 0.02
-    reg_lambda: 0.01
-    #weights: [0.49568515884305353, 0.5043148411569465]
+    max_depth: 6
+    reg_lambda: 5
+    colsample_bylevel: 1.0
   
 

@@ -11,6 +11,7 @@ from utils import optimized_f1
 
 import mlflow
 from google.cloud import storage
+TH = 0.389
 
 class Logging():
     def __init__(self, param):
@@ -83,8 +84,9 @@ class Logging():
             cv_score, self.bt = optimized_f1(train_y[mask][self.y], preds["pred"])
         except:
             cv_score = np.mean(cv_scores)
-            self.bt = np.mean(np.array(li))
             print("mean cv")
+        self.bt = np.mean(np.array(self.bts))
+            
         print(f"final cv : {cv_score}, best threshold : {self.bt}")
         return cv_score, cv_scores
 
@@ -169,5 +171,6 @@ class Logging():
         print(test.shape)
         print(pred.shape)
         sub_df = pd.concat([test, pred], axis=1)
-        sub_df["pred"] = np.where(sub_df["pred"].values.copy() < self.bt, 0, 1)
+        #sub_df["pred"] = np.where(sub_df["pred"].values.copy() < self.bt, 0, 1)
+        sub_df["pred"] = np.where(sub_df["pred"].values.copy() < TH, 0, 1)
         sub_df.to_csv(osp.join(self.WORK_DIR, "submission.csv"), index=False, header=False)
