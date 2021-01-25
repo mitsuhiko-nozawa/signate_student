@@ -91,12 +91,12 @@ class Base_NN(nn.Module):
         self.n_numfeats = n_numfeats
         self.embs = [Embedding_Module(self.embedding_dim).to(torch.device("cuda:8") if torch.cuda.is_available() else torch.device("cpu")) for i in range(self.n_embfeats)]
         self.bn1 = nn.BatchNorm1d(self.n_embfeats)
-        self.dropout1 = nn.Dropout(0.1)
+        self.dropout1 = nn.Dropout(0.15)
         self.dense1 = nn.Linear(self.n_embfeats, self.n_embfeats)
         self.relu1 = nn.ReLU()
 
         self.bn2 = nn.BatchNorm1d(self.n_numfeats)
-        self.dropout2 = nn.Dropout(0.1)
+        self.dropout2 = nn.Dropout(0.15)
         self.dense2 = nn.Linear(self.n_numfeats, self.n_numfeats)
         self.relu2 = nn.ReLU()
 

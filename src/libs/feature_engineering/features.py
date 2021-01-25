@@ -13,6 +13,7 @@ from sklearn.model_selection import KFold, StratifiedKFold
 from sklearn.cluster import KMeans
 from xfeat import TargetEncoder
 import nltk
+from nltk.stem.porter import PorterStemmer as PS
 
 
 class default_features(Feature):
@@ -257,3 +258,55 @@ class tgtenc_Agg(Feature):
                 test_df = pd.merge(test_df, agg_df, on=[col], how="left")
 
         return train_df[use_cols], test_df[use_cols]
+
+
+class countVectorizer_stemming_svd(Feature):
+    def create_features(self):
+        train_df, test_df = self.read_input()
+        TR_SIZE = train_df.shape[0]
+        ps = PS()
+        for df in [train_df, test_df]:
+            df["html_content"] = df["html_content"].map(lambda x : BeautifulSoup(x).get_text())
+            df["html_content"] = df["html_content"].map(lambda x : re.sub("[^a-zA-Z]"," ", x)) 
+            df["html_content"] = df["html_content"].map(lambda x : re.sub("  ","", x)) 
+            df["html_content"] = df["html_content"].map(lambda x : " ".join([ps.stem(w) for w in x.split() ])) 
+            df["html_content"] = df["html_content"].map(lambda x : x.lower()) 
+        # stop words 未処理
+        n_comp = 10
+        stopwords = nltk.corpus.stopwords.words('english')
+        vectorizer = CountVectorizer(analyzer="word", tokenizer=None, preprocessor=None, stop_words=stopwords, max_features=12000)
+        svd = TruncatedSVD(n_components=n_comp, random_state=0)
+        feats = [f"countVec_{i}" for i in range(n_comp)]
+
+        #vectorizer.fit(train_df.append(test_df)["html_content"])
+        vals = vectorizer.fit_transform(train_df.append(test_df)["html_content"])
+        vals = svd.fit_transform(vals)
+        tr_svd_feats = pd.DataFrame(vals[:TR_SIZE], columns=feats)
+        te_svd_feats = pd.DataFrame(vals[TR_SIZE:], columns=feats)
+        return tr_svd_feats, te_svd_feats
+
+class tfidfVectorizer_stemming_svd(Feature):
+    def create_features(self):
+        train_df, test_df = self.read_input()
+        TR_SIZE = train_df.shape[0]
+        ps = PS()
+        for df in [train_df, test_df]:
+            df["html_content"] = df["html_content"].map(lambda x : BeautifulSoup(x).get_text())
+            df["html_content"] = df["html_content"].map(lambda x : re.sub("[^a-zA-Z]"," ", x)) 
+            df["html_content"] = df["html_content"].map(lambda x : re.sub("  ","", x)) 
+            df["html_content"] = df["html_content"].map(lambda x : " ".join([ps.stem(w) for w in x.split() ])) 
+            df["html_content"] = df["html_content"].map(lambda x : x.lower()) 
+        # stop words 未処理
+        n_comp = 80
+        stopwords = nltk.corpus.stopwords.words('english')
+        vectorizer = TfidfVectorizer(analyzer="word", tokenizer=None, preprocessor=None, stop_words=stopwords, max_features=12000)
+        svd = TruncatedSVD(n_components=n_comp, random_state=0)
+        feats = [f"tfidfVec_{i}" for i in range(n_comp)]
+
+        #vectorizer.fit(train_df.append(test_df)["html_content"])
+        vals = vectorizer.fit_transform(train_df.append(test_df)["html_content"])
+        vals = svd.fit_transform(vals)
+        tr_svd_feats = pd.DataFrame(vals[:TR_SIZE], columns=feats)
+        te_svd_feats = pd.DataFrame(vals[TR_SIZE:], columns=feats)
+        return tr_svd_feats, te_svd_feats
+

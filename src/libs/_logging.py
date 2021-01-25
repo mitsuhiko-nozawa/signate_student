@@ -140,7 +140,10 @@ class Logging():
             mlflow.log_metric("cv_score", self.cv_score)
             #log_metric("cv_scores", self.cv_scores)
 
-            mlflow.log_artifact(self.feature_importances_fname)
+            try:
+                mlflow.log_artifact(self.feature_importances_fname)
+            except:
+                pass
             mlflow.log_artifact(self.submission_fname)
 
     def upload_gcs(self):

@@ -61,7 +61,7 @@ train_param:
   model: NN_Model
   model_param:
     model_type: Base_NN
-    MAX_EPOCH: 55
+    MAX_EPOCH: 100
     optimizer: Adam
     early_stopping: 20
     scheduler: ReduceLROnPlateau

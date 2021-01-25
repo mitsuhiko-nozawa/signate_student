@@ -3,23 +3,14 @@ exp_param:
   ROOT: None # */src
   cv: stratified_cv
   nfolds: 5
-  seeds: [0, 1, 2, 3, 4]
-  exp_name: exp_006
+  seeds: [0]
+  exp_name: exp_001
   features: 
     - stratified_cv
     - default_features
-    #- targetMeanEncode
+    - targetMeanEncode
     - countVectorizer_svd
     - tfidfVectorizer_svd
-    #- countVectorizer_stemming_svd
-    #- tfidfVectorizer_stemming_svd
-    - oof_targetMeanEncode
-    - coutEncode
-    - prod_features
-    - word_Count
-    - html_tagCount
-    - boolean_feats
-    - tgtenc_Agg
     
   y: state
 
@@ -37,27 +28,13 @@ prepro_param:
   drop_features:
     - id
     - html_content
-    - country #いらない
-    - goal_duration #いらない
-    #- goal_tgtvar
-    #- duration_tgtvar
-  scale_flag: False
-  scale: StandardScaler
-  scale_param: None
-
-
   label_encode:
     - goal
     - country
     - category1
     - category2
-    - goal_duration
-    - goal_country
-    - country_category1
-    - duration_country
 
   
-
 
 train_param: 
   model: LGBM_Model
@@ -69,14 +46,12 @@ train_param:
     learning_rate: 0.05
     objective: binary
     verbose: -1 #消すとログがやばい
-    min_child_samples: 100
+    min_child_samples: 80
     early_stopping_rounds: 100
     saved_feature_importance_type: 1
     #max_bin: 100
     reg_alpha: 0.02
     reg_lambda: 0.01
-    bagging_fraction: 0.5
-    feature_fraction: 0.5
     #weights: [0.49568515884305353, 0.5043148411569465]
   
 
