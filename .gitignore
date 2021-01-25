@@ -21,3 +21,4 @@ src/features/test/*
 **/*.csv
 !**/.gitkeep
 **/*.ipynb
+**/*.pt

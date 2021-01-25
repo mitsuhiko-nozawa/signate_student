@@ -45,8 +45,7 @@ class Preprocessing():
             test_df.to_csv(osp.join(self.WORK_DIR, "test", "test.csv"), index=False)
             if self.scale_flag:
                 for col in train_df.columns:
-                    
-                    if (train_df[col].dtype == float or "Count" in col or "count" in col) and "country" not in col:
+                    if (train_df[col].dtype == float or "Count" in col or "count" in col) and "country" not in col and "Vec" not in col:
                         print(col)
                         sc = eval(self.scale)().fit(train_df.append(test_df)[col].values.reshape(-1, 1))
                         train_df[col] = sc.transform(train_df[col].values.reshape(-1, 1))

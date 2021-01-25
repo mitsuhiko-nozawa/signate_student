@@ -23,7 +23,7 @@ def run_training(model, trainloader, validloader, epoch_, optimizer, scheduler, 
         
         if valid_loss < best_loss:
             best_loss = valid_loss
-            torch.save(model.state_dict(), osp.join( path, "weight" f"{seed}_{fold}.pt") )
+            torch.save(model.state_dict(), osp.join( path, "weight",  f"{seed}_{fold}.pt") )
             early_step = 0
             best_epoch = epoch
         
@@ -52,10 +52,7 @@ def train_fn(model, optimizer, scheduler, loss_fn, dataloader, device):
         optimizer.step()
         # if cycle
         #scheduler.step()
-        #print("loss", loss.item())
-        #cnt+=1
-        #if cnt == 20:
-        #    raise ValueError
+
         final_loss += loss.item()
         
     final_loss /= len(dataloader)
